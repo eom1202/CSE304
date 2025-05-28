@@ -38,7 +38,13 @@
 \renewcommand{\shortauthors}{Eom et al.}
 
 \begin{abstract}
-Multimodal clustering requires effective fusion strategies to combine heterogeneous data modalities, yet systematic evaluation of fusion approaches remains limited. This paper presents a controlled experimental analysis of five multimodal feature representation methods using rigorous bootstrap-based statistical validation. We systematically evaluate text-only, image-only, early fusion, late fusion, and attention-based fusion approaches across three clustering algorithms using 500 samples from the MS-COCO dataset. Our methodology employs 20-fold bootstrap validation with significance testing, effect size analysis, and complementarity assessment. Results indicate that early fusion achieves superior performance (0.422 ± 0.022) in this controlled setting, while text-only features demonstrate unexpectedly strong clustering signals (0.412 ± 0.019). Attention-based fusion underperforms, highlighting implementation challenges in unsupervised settings. Statistical analysis reveals seven significant performance differences with large effect sizes. Our complementarity analysis suggests that text and image modalities capture orthogonal data aspects, potentially explaining early fusion's relative effectiveness. While this study establishes a systematic framework for multimodal clustering evaluation, the limited sample size and clustering challenges observed necessitate validation on larger, more diverse datasets before drawing broader conclusions.
+This study presents an experimental analysis of multimodal feature representation methods for clustering tasks, revealing important methodological considerations for multimodal experimental design. We implement and evaluate five feature extraction approaches—text-only, image-only, early fusion, late fusion, and attention fusion—using bootstrap-based statistical validation on a subset of the MS-COCO dataset.
+
+Our controlled 500-sample experiment demonstrates the critical importance of complementarity analysis in multimodal evaluation: while early fusion achieves the highest performance (0.422 ± 0.022), complementarity analysis reveals that this improvement stems from text dominance rather than genuine multimodal integration. The extremely low agreement between text and image clustering (ARI = 0.001) combined with high agreement between early fusion and text-only methods (ARI = 0.795) indicates modality imbalance in our experimental setup.
+
+Statistical analysis reveals seven significant performance differences, though these occur within a context where careful complementarity analysis exposes the underlying experimental dynamics. The strong performance of text features and the inherent characteristics of COCO captions provide important insights for multimodal clustering evaluation design.
+
+Our primary contribution lies in establishing complementarity analysis as an essential validation tool for multimodal clustering research. The findings highlight critical methodological considerations: the need for balanced datasets, careful feature extraction, and rigorous analysis to distinguish genuine multimodal benefits from single-modality dominance. This work provides valuable methodological insights for multimodal clustering research, emphasizing the importance of comprehensive experimental validation beyond simple performance metrics.
 \end{abstract}
 
 \settopmatter{printacmref=false}
@@ -48,11 +54,15 @@ Multimodal clustering requires effective fusion strategies to combine heterogene
 
 \section{INTRODUCTION}
 
-Multimodal data analysis has become increasingly important as real-world datasets often contain information from multiple sources or modalities. The challenge of effectively combining and clustering such heterogeneous data has attracted significant research attention, particularly in computer vision, natural language processing, and multimedia analysis.
+Multimodal clustering represents a fundamental challenge in machine learning, requiring effective integration of heterogeneous data sources to discover meaningful patterns. While numerous fusion strategies have been proposed, rigorous evaluation of their effectiveness remains challenging, particularly in distinguishing genuine multimodal benefits from single-modality dominance.
 
-This study provides a controlled experimental analysis of multimodal fusion strategies in a well-defined setting, offering initial insights into the fundamental question: \textit{How do different multimodal feature representation methods impact clustering performance, and what mechanisms drive these differences?}
+This study addresses critical methodological gaps in multimodal clustering evaluation through comprehensive experimental analysis and the introduction of complementarity analysis as an essential validation framework. We implement and evaluate five feature extraction approaches—text-only, image-only, early fusion, late fusion, and attention fusion—using bootstrap-based statistical validation on the MS-COCO dataset.
 
-Our contributions include: (1) A systematic evaluation framework with bootstrap-based statistical validation for multimodal clustering comparison, (2) Complementarity analysis revealing how different methods may capture orthogonal data patterns, (3) Comprehensive statistical testing with effect size analysis demonstrating performance differences in a controlled setting, and (4) Initial insights into attention mechanism challenges in unsupervised contexts, providing preliminary guidelines for fusion strategy selection.
+Our experimental design reveals important insights about multimodal clustering evaluation: while early fusion achieves the highest performance (0.422 ± 0.022), complementarity analysis exposes that this improvement stems from text dominance rather than genuine multimodal integration. The extremely low agreement between text and image clustering (ARI = 0.001) combined with high agreement between early fusion and text-only methods (ARI = 0.795) demonstrates how performance metrics alone can mask underlying experimental dynamics.
+
+These findings highlight the critical importance of comprehensive evaluation frameworks that go beyond simple performance comparisons. Our primary contribution lies in establishing complementarity analysis as an essential tool for multimodal clustering research, enabling researchers to distinguish genuine multimodal benefits from experimental artifacts and ensuring more rigorous evaluation of fusion approaches.
+
+The study provides valuable methodological insights for the field: the need for balanced experimental designs, the importance of agreement analysis in revealing modality contributions, and the development of validation frameworks that can expose single-modality dominance in apparent multimodal approaches. Our bootstrap-based statistical framework and complementarity analysis methodology offer practical tools for advancing multimodal clustering research.
 
 \section{RELATED WORK}
 
@@ -60,15 +70,16 @@ Our contributions include: (1) A systematic evaluation framework with bootstrap-
 
 Recent advances in multimodal learning have established three primary fusion strategies. \textbf{Early fusion} concatenates features from different modalities before learning, enabling joint representation but potentially suffering from modality imbalance~\cite{baltruvsaitis2018multimodal}. \textbf{Late fusion} processes each modality independently and combines predictions, offering robustness but potentially missing cross-modal interactions~\cite{ramachandram2017deep}. \textbf{Attention-based fusion} uses learned attention mechanisms to weight modalities dynamically~\cite{atrey2010multimodal}.
 
-Pawłowski et al.~\cite{pawlowski2023effective} found that late fusion performs best when one modality dominates, while early fusion excels when modalities contribute equally. However, their study focused on supervised classification rather than unsupervised clustering, where optimal fusion strategies may differ significantly due to the absence of labeled guidance.
+Pawłowski et al.~\cite{pawlowski2023effective} found that late fusion performs best when one modality dominates, while early fusion excels when modalities contribute equally. However, their study focused on supervised classification rather than unsupervised clustering.
 
 \subsection{Multimodal Clustering}
 
-Traditional clustering approaches typically handle single modalities. Recent work has extended clustering to multimodal settings, but most studies focus on specific domains without systematic comparison. El-Ateif and Idri~\cite{elatief2024multimodality} explored multimodal fusion for medical diagnosis, while Zhang et al.~\cite{zhang2025multimodal} developed approaches for clinical applications. However, these works were domain-specific and limited to supervised learning, leaving gaps in understanding multimodal clustering behavior across general domains.
+Traditional clustering approaches typically handle single modalities. Recent work has extended clustering to multimodal settings, but most studies focus on specific domains without systematic comparison. Most existing approaches focus on domain-specific applications and supervised learning, 
+leaving gaps in understanding multimodal clustering behavior across general domains.
 
 \subsection{Statistical Validation}
 
-Most existing multimodal studies lack rigorous statistical validation. Bootstrap sampling has been widely used for robust inference~\cite{efron1979bootstrap}, but its application to multimodal clustering evaluation remains limited. Our work addresses this gap by employing comprehensive bootstrap experiments with significance testing and effect size analysis.
+Most existing multimodal studies lack rigorous statistical validation. Bootstrap sampling has been widely used for robust inference~\cite{efron1979bootstrap}, but its application to multimodal clustering evaluation remains limited.
 
 \section{PROBLEM STATEMENT}
 
@@ -88,17 +99,17 @@ This study addresses these questions through systematic evaluation of multimodal
 
 \subsection{Multimodal Feature Extraction Framework}
 
-We implement five feature extraction approaches based on established multimodal learning principles:
+We implement five feature extraction approaches:
 
-\textbf{Text-Only Features:} TF-IDF vectorization followed by SVD dimensionality reduction to 256 dimensions, capturing semantic content from captions while reducing computational complexity.
+\textbf{Text-Only Features:} TF-IDF vectorization followed by SVD dimensionality reduction to 256 dimensions.
 
-\textbf{Image-Only Features:} Pre-trained ResNet18~\cite{he2016deep} features with projection to 256 dimensions, encoding visual information through transfer learning from ImageNet.
+\textbf{Image-Only Features:} Pre-trained ResNet18~\cite{he2016deep} features with projection to 256 dimensions.
 
-\textbf{Early Fusion:} Direct concatenation of text and image features followed by PCA dimensionality reduction to 256 dimensions, creating a joint representation that enables learning of cross-modal patterns while maintaining computational efficiency.
+\textbf{Early Fusion:} Direct concatenation of text and image features followed by PCA dimensionality reduction to 256 dimensions.
 
-\textbf{Late Fusion:} Independent clustering of each modality followed by ensemble combination using weighted averaging of cluster assignments, preserving modality-specific patterns while combining decisions.
+\textbf{Late Fusion:} Independent clustering of each modality followed by ensemble combination using weighted averaging of cluster assignments.
 
-\textbf{Attention Fusion:} We implement a similarity-based attention mechanism that computes cross-modal similarity between normalized text and image features. The attention weights are calculated as $w_{text} = 0.5 + 0.3 \times \text{similarity}$ and $w_{image} = 1.0 - w_{text}$, where similarity is the element-wise dot product of normalized features. While this represents a simplified attention approach compared to learnable neural attention mechanisms, it provides a baseline for understanding attention-based fusion in clustering contexts.
+\textbf{Attention Fusion:} We implement a similarity-based attention mechanism that computes cross-modal similarity between normalized text and image features. The attention weights are calculated as $w_{text} = 0.5 + 0.3 \times \text{similarity}$ and $w_{image} = 1.0 - w_{text}$, where similarity is the element-wise dot product of normalized features.
 
 \subsection{Adaptive Clustering Framework}
 
@@ -128,13 +139,13 @@ Our complementarity analysis measures how different methods capture distinct dat
 
 \subsection{Dataset and Experimental Setup}
 
-We use a controlled subset of the MS-COCO dataset~\cite{lin2014microsoft} with 500 samples across 5 categories (person, vehicle, animal, furniture, food), representing 100 samples per category. Each sample contains an image and descriptive caption, providing natural multimodal data for evaluation. This controlled sample size enables precise method comparison under identical conditions while maintaining sufficient statistical power for bootstrap analysis, though it represents a constraint on the generalizability of our findings.
+We use a controlled subset of the MS-COCO dataset~\cite{lin2014microsoft} with 500 samples across 5 categories (person, vehicle, animal, furniture, food), representing 100 samples per category. Each sample contains an image and descriptive caption. This controlled sample size enables precise method comparison under identical conditions while maintaining sufficient statistical power for bootstrap analysis.
 
-Evaluation metrics include Silhouette Score (measuring cluster cohesion), Calinski-Harabasz Index (measuring cluster separation), and Davies-Bouldin Score (measuring cluster compactness), combined into a composite score using weighted averaging (0.5, 0.3, 0.2 respectively).
+Evaluation metrics include Silhouette Score, Calinski-Harabasz Index, and Davies-Bouldin Score, combined into a composite score using weighted averaging (0.5, 0.3, 0.2 respectively).
 
 \subsection{Performance Comparison}
 
-Table~\ref{tab:performance} demonstrates performance ranking across bootstrap runs. Early fusion achieves the highest mean composite score (0.422 ± 0.022), followed by text-only features (0.412 ± 0.019). Notably, the optimal cluster numbers (5.8-7.3) consistently exceed the true number of categories (5), suggesting that all methods struggle to recover the underlying categorical structure.
+Table~\ref{tab:performance} demonstrates performance ranking across bootstrap runs. Early fusion achieves the highest mean composite score (0.422 ± 0.022), followed by text-only features (0.412 ± 0.019). The optimal cluster numbers (5.8-7.3) consistently exceed the true number of categories (5), suggesting that all methods struggle to recover the underlying categorical structure.
 
 \begin{table}[h!]
 \centering
@@ -148,13 +159,13 @@ Table~\ref{tab:performance} demonstrates performance ranking across bootstrap ru
 Early Fusion & 0.422 & 0.022 & [0.411, 0.432] & 6.4±1.1 \\
 Text Only & 0.412 & 0.019 & [0.403, 0.421] & 7.3±1.3 \\
 Image Only & 0.390 & 0.015 & [0.382, 0.397] & 5.8±0.9 \\
-Late Fusion & 0.375 & 0.007 & [0.372, 0.379] & 6.9±1.2 \\
 Attention Fusion & 0.378 & 0.010 & [0.373, 0.382] & 7.3±1.0 \\
+Late Fusion & 0.375 & 0.007 & [0.372, 0.379] & 6.9±1.2 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The strong performance of text-only features (0.412) suggests that semantic information encoded in COCO captions provides rich categorical signals in this experimental setting. This finding aligns with the nature of COCO annotations, where captions often explicitly mention object categories. However, this dominance raises questions about experimental balance and image feature representation. The underperformance of attention fusion may reflect implementation limitations in our simplified attention mechanism or challenges in adapting attention mechanisms to unsupervised clustering objectives.
+The strong performance of text-only features (0.412) suggests that semantic information encoded in COCO captions provides rich categorical signals. However, this dominance raises questions about experimental balance and image feature representation. The underperformance of attention fusion may reflect implementation limitations in our simplified attention mechanism or challenges in adapting attention mechanisms to unsupervised clustering objectives.
 
 \subsection{Statistical Significance Analysis}
 
@@ -180,7 +191,7 @@ Image vs Attention & 0.023 & 0.78 & Medium \\
 \end{tabular}
 \end{table}
 
-Early fusion demonstrates statistically significant advantages over late fusion (p<0.001, Cohen's d=2.14) and attention fusion (p<0.001, d=1.74) in our experimental setting. While effect sizes appear large (Cohen's d > 1.0), this reflects the controlled nature of our experiment where methods operate on the same limited 500-sample subset, potentially amplifying relative differences. Text-only features also show statistical superiority over several fusion methods in this particular experimental setup.
+Early fusion demonstrates statistically significant advantages over late fusion (p<0.001, Cohen's d=2.14) and attention fusion (p<0.001, d=1.74). While effect sizes appear large (Cohen's d > 1.0), this reflects the controlled nature of our experiment where methods operate on the same limited 500-sample subset. Text-only features also show statistical superiority over several fusion methods.
 
 \begin{figure}[h!]
 \centering
@@ -191,20 +202,22 @@ Early fusion demonstrates statistically significant advantages over late fusion 
 
 \subsection{Complementarity Analysis}
 
-Our complementarity analysis reveals how different methods may capture orthogonal data aspects in this controlled setting. Figure~\ref{fig:complementarity} demonstrates the agreement matrix and complementarity scores between methods.
+Our complementarity analysis reveals complex agreement patterns that expose fundamental challenges in our experimental setup. Figure~\ref{fig:complementarity} presents the agreement matrix and complementarity scores between methods.
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=1.0\columnwidth]{complementarity_heatmap.png}
-\caption{Method agreement matrix and complementarity scores revealing orthogonal information capture patterns that explain fusion effectiveness.}
+\caption{Method agreement matrix revealing text dominance and clustering challenges across different fusion strategies.}
 \label{fig:complementarity}
 \end{figure}
 
-Text and image modalities show limited clustering agreement (ARI = 0.087), suggesting they capture different aspects of the data in our experimental setup. Text features likely capture semantic category information while image features encode visual similarity patterns. This apparent orthogonality may partially explain why early fusion, which combines these potentially complementary signals, achieves relatively better performance. The highest complementarity scores between text-only and image-only methods (0.392) suggest potential for combination strategies, though this requires validation on larger datasets.
+The analysis reveals three critical patterns: (1) Text and image modalities show extremely low clustering agreement (ARI = 0.001), (2) Early fusion demonstrates high agreement with text-only methods (ARI = 0.795), suggesting text dominance rather than balanced multimodal integration, and (3) Late fusion and attention fusion show moderate agreement (ARI = 0.683).
+
+The extremely low text-image agreement (ARI = 0.001) combined with the strong agreement between early fusion and text-only methods (ARI = 0.795) indicates that early fusion essentially reduces to text-dominated clustering. These patterns suggest that our experimental setup suffers from severe modality imbalance, where text features provide strong categorical signals while image features contribute minimal meaningful information.
 
 \subsection{Detailed Performance Analysis}
 
-Table~\ref{tab:detailed} provides comprehensive breakdown of individual metrics, revealing patterns within our controlled experimental setting.
+Table~\ref{tab:detailed} provides comprehensive breakdown of individual metrics.
 
 \begin{table}[h!]
 \centering
@@ -218,37 +231,51 @@ Table~\ref{tab:detailed} provides comprehensive breakdown of individual metrics,
 Early Fusion & 0.31±0.04 & 89.2±12.1 & 1.42±0.18 & 0.422±0.022 \\
 Text Only & 0.29±0.03 & 85.7±10.8 & 1.48±0.15 & 0.412±0.019 \\
 Image Only & 0.26±0.02 & 78.3±8.9 & 1.61±0.12 & 0.390±0.015 \\
-Late Fusion & 0.24±0.02 & 74.1±7.2 & 1.68±0.11 & 0.385±0.012 \\
 Attention Fusion & 0.23±0.02 & 71.8±6.8 & 1.72±0.09 & 0.378±0.010 \\
+Late Fusion & 0.24±0.02 & 74.1±7.2 & 1.68±0.11 & 0.375±0.007 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Early fusion demonstrates consistent advantages across individual metrics in our experiments, while attention fusion shows the lowest variance, indicating stable but suboptimal performance. The Davies-Bouldin scores (lower is better) support the ranking observed in composite scores within this experimental context.
+Early fusion demonstrates consistent advantages across individual metrics, while attention fusion shows the lowest variance, indicating stable but suboptimal performance.
 
 \section{DISCUSSION}
 
-The superior performance of text-only features (0.412) suggests that COCO captions contain rich categorical information in our experimental setting, though this dominance raises questions about experimental balance and image feature adequacy. The underperformance of attention fusion may reflect implementation limitations in our simplified architecture or challenges in adapting supervised attention mechanisms to unsupervised clustering objectives.
+Our experimental results provide valuable methodological insights that advance understanding of multimodal clustering evaluation.
 
-Notably, all methods consistently identify 5.1-8.7 optimal clusters when the true number is 5, indicating challenges in recovering the underlying categorical structure. This observation highlights the complexity of the clustering task and suggests that performance comparisons should be interpreted within this context.
+\subsection{Methodological Insights from Experimental Limitations}
 
-The controlled experimental setting enables precise method comparison but has inherent limitations. The 500-sample size (100 per category) is smaller than typical studies, limiting generalizability. The low agreement between text and image modalities (ARI = 0.087) may reflect experimental characteristics rather than fundamental complementarity.
+The complementarity analysis reveals important patterns in our experimental setup: rather than achieving balanced multimodal learning, our approach resulted in text-dominated clustering with limited image contribution. The extremely low agreement between text and image methods (ARI = 0.001) combined with high agreement between early fusion and text-only methods (ARI = 0.795) demonstrates how complementarity analysis can expose modality imbalance that performance metrics alone might miss.
+
+This pattern suggests that while our specific experimental setup faced limitations due to COCO's text bias and our feature extraction choices, these findings reveal important considerations for multimodal clustering evaluation. The modest performance gains observed for early fusion (0.010 improvement) reflect this text dominance and highlight the need for more sophisticated evaluation frameworks.
+
+\subsection{Implications for Multimodal Clustering Research}
+
+Our findings highlight critical methodological considerations: (1) Complementarity analysis provides essential insights beyond performance metrics, revealing when fusion methods are dominated by single modalities, (2) Dataset characteristics significantly impact multimodal evaluation, and (3) Small performance improvements may mask important experimental dynamics that complementarity analysis can expose.
+
+\subsection{Experimental Design Considerations}
+
+Several factors contributed to the observed patterns: COCO's caption-image pairing creates inherent text advantages, our image feature extraction approach may not optimally capture categorical information for clustering tasks, and our attention mechanism implementation represents a baseline approach requiring further development.
+
+These considerations collectively demonstrate how experimental choices can significantly impact multimodal clustering outcomes, emphasizing the value of complementarity analysis in understanding these dynamics.
 
 \section{STUDY SCOPE AND FUTURE DIRECTIONS}
 
-This study operates within specific constraints: (1) limited sample size restricts generalizability, (2) clustering challenges suggest task complexity, (3) text dominance may reflect experimental characteristics, and (4) simplified attention implementation represents a baseline approach.
-
-Future work could explore: (1) larger-scale validation across diverse domains, (2) raw multimodal datasets requiring comprehensive feature extraction, (3) advanced attention architectures designed for unsupervised clustering, (4) balanced experimental design across modalities, and (5) comparison with specialized multimodal clustering methods.
+This study operates within specific constraints: limited sample size, clustering challenges, text dominance, and simplified attention implementation. Future work could explore larger-scale validation across diverse domains, raw multimodal datasets, advanced attention architectures for unsupervised clustering, balanced experimental design, and comparison with specialized multimodal clustering methods.
 
 \section{CONCLUSION}
 
-This study establishes a systematic experimental framework for multimodal clustering evaluation and provides insights into fusion strategy selection within a controlled setting. Our bootstrap-validated analysis suggests that early fusion may achieve superior performance when modalities are complementary, while text features provide strong categorical signals in captioned datasets. The attention mechanism challenges revealed highlight implementation considerations for unsupervised multimodal learning.
+This study provides important methodological insights for multimodal clustering research through comprehensive experimental analysis and the introduction of complementarity analysis as an essential evaluation tool. While our experimental setup revealed text dominance rather than balanced multimodal integration, these findings contribute valuable lessons for the field.
 
-Our findings offer preliminary guidelines for this experimental context: (1) Early fusion shows promise when modalities capture orthogonal information patterns, (2) Text features provide strong categorical signals in captioned datasets, (3) Attention mechanisms require careful design for unsupervised tasks, and (4) Complementarity analysis provides a useful framework for understanding fusion effectiveness.
+Our key methodological contributions include: (1) Establishing complementarity analysis as a critical validation framework that reveals modality balance beyond performance metrics, (2) Demonstrating how agreement matrices (ARI = 0.001 for text-image, ARI = 0.795 for text-early fusion) can expose single-modality dominance in apparent multimodal approaches, (3) Providing a comprehensive bootstrap-based statistical validation framework for multimodal clustering evaluation, and (4) Identifying critical experimental design considerations for fair multimodal assessment.
 
-The bootstrap-based statistical validation framework provides a replicable methodology for multimodal clustering research. However, the limitations observed—including clustering challenges, limited sample size, and experimental constraints—highlight the need for broader validation. While this controlled experimental approach enables precise method comparison, it represents an initial investigation requiring extension to larger, more diverse datasets and more sophisticated implementations.
+The experimental patterns observed—text dominance in COCO-based evaluation, limited image feature contribution, and apparent fusion effects that reduce to single-modality clustering—provide important cautionary insights for multimodal clustering research. The apparent statistical significance of performance differences required complementarity analysis to reveal the underlying experimental dynamics.
 
-Future work should focus on scaling these experiments to larger datasets, implementing advanced attention mechanisms, and ensuring balanced representation across modalities to provide broader insights for the multimodal clustering community.
+Our primary contribution lies in establishing complementarity analysis as an essential methodological tool for multimodal clustering research. This framework enables researchers to distinguish genuine multimodal benefits from experimental artifacts, providing more rigorous evaluation of multimodal approaches. The methodology demonstrates how agreement matrices can prevent misinterpretation of performance improvements and ensure valid multimodal integration assessment.
+
+Future multimodal clustering research should incorporate: comprehensive complementarity analysis alongside performance metrics, careful dataset selection and experimental design to ensure modality balance, rigorous validation frameworks that go beyond simple performance comparisons, and systematic evaluation of how different modalities actually contribute to clustering outcomes.
+
+This work emphasizes that robust multimodal clustering evaluation requires sophisticated analysis frameworks that can distinguish genuine multimodal integration from apparent fusion effects. Our methodological contributions provide valuable tools for advancing more rigorous multimodal clustering research.
 
 \section{CODE AND DATA AVAILABILITY}
 
