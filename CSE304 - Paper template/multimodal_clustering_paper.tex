@@ -90,23 +90,23 @@ This study addresses these questions through systematic evaluation of multimodal
 
 We implement five feature extraction approaches based on established multimodal learning principles:
 
-\textbf{Text-Only Features:} TF-IDF vectorization followed by SVD dimensionality reduction to 512 dimensions, capturing semantic content from captions while reducing computational complexity.
+\textbf{Text-Only Features:} TF-IDF vectorization followed by SVD dimensionality reduction to 256 dimensions, capturing semantic content from captions while reducing computational complexity.
 
-\textbf{Image-Only Features:} Pre-trained ResNet18~\cite{he2016deep} features with projection to 512 dimensions, encoding visual information through transfer learning from ImageNet.
+\textbf{Image-Only Features:} Pre-trained ResNet18~\cite{he2016deep} features with projection to 256 dimensions, encoding visual information through transfer learning from ImageNet.
 
-\textbf{Early Fusion:} Direct concatenation of text and image features before clustering, creating a 1024-dimensional joint representation that enables learning of cross-modal patterns.
+\textbf{Early Fusion:} Direct concatenation of text and image features followed by PCA dimensionality reduction to 256 dimensions, creating a joint representation that enables learning of cross-modal patterns while maintaining computational efficiency.
 
 \textbf{Late Fusion:} Independent clustering of each modality followed by ensemble combination using weighted averaging of cluster assignments, preserving modality-specific patterns while combining decisions.
 
-\textbf{Attention Fusion:} We implement a two-layer neural network (512→256→2 neurons) with ReLU activation and softmax normalization to compute attention weights for text and image features. While this represents a simplified attention mechanism, it provides a baseline for understanding attention-based fusion in clustering contexts. The attention weights dynamically adjust the contribution of each modality based on sample-specific relevance.
+\textbf{Attention Fusion:} We implement a similarity-based attention mechanism that computes cross-modal similarity between normalized text and image features. The attention weights are calculated as $w_{text} = 0.5 + 0.3 \times \text{similarity}$ and $w_{image} = 1.0 - w_{text}$, where similarity is the element-wise dot product of normalized features. While this represents a simplified attention approach compared to learnable neural attention mechanisms, it provides a baseline for understanding attention-based fusion in clustering contexts.
 
 \subsection{Adaptive Clustering Framework}
 
 Our clustering framework automatically determines optimal cluster numbers and applies three algorithms:
 
-\textbf{K-means:} Partition-based clustering with automatic k selection via silhouette optimization, testing k values from 2 to 15.
+\textbf{K-means:} Partition-based clustering with automatic k selection via elbow method, testing k values from 3 to 10.
 
-\textbf{Spectral Clustering:} Graph-based approach using RBF kernel with automatic parameter tuning through grid search over gamma values.
+\textbf{Spectral Clustering:} Graph-based approach using RBF kernel with fixed gamma parameter (γ=1.0).
 
 \textbf{Hierarchical Clustering:} Agglomerative clustering with Ward linkage and automatic cutting based on silhouette score maximization.
 
@@ -134,7 +134,7 @@ Evaluation metrics include Silhouette Score (measuring cluster cohesion), Calins
 
 \subsection{Performance Comparison}
 
-Table~\ref{tab:performance} demonstrates performance ranking across bootstrap runs. Early fusion achieves the highest mean composite score (0.422 ± 0.022), followed by text-only features (0.412 ± 0.019). Notably, the optimal cluster numbers (5.1-8.7) consistently exceed the true number of categories (5), suggesting that all methods struggle to recover the underlying categorical structure.
+Table~\ref{tab:performance} demonstrates performance ranking across bootstrap runs. Early fusion achieves the highest mean composite score (0.422 ± 0.022), followed by text-only features (0.412 ± 0.019). Notably, the optimal cluster numbers (5.8-7.3) consistently exceed the true number of categories (5), suggesting that all methods struggle to recover the underlying categorical structure.
 
 \begin{table}[h!]
 \centering
@@ -145,11 +145,11 @@ Table~\ref{tab:performance} demonstrates performance ranking across bootstrap ru
 \toprule
 \textbf{Method} & \textbf{Mean} & \textbf{Std} & \textbf{95\% CI} & \textbf{Opt. K} \\
 \midrule
-Early Fusion & 0.422 & 0.022 & [0.411, 0.432] & 6.2±1.1 \\
-Text Only & 0.412 & 0.019 & [0.403, 0.421] & 8.7±1.3 \\
-Image Only & 0.390 & 0.015 & [0.383, 0.397] & 5.1±0.9 \\
-Late Fusion & 0.385 & 0.012 & [0.379, 0.390] & 7.3±1.2 \\
-Attention Fusion & 0.378 & 0.010 & [0.373, 0.382] & 6.8±1.0 \\
+Early Fusion & 0.422 & 0.022 & [0.411, 0.432] & 6.4±1.1 \\
+Text Only & 0.412 & 0.019 & [0.403, 0.421] & 7.3±1.3 \\
+Image Only & 0.390 & 0.015 & [0.382, 0.397] & 5.8±0.9 \\
+Late Fusion & 0.375 & 0.007 & [0.372, 0.379] & 6.9±1.2 \\
+Attention Fusion & 0.378 & 0.010 & [0.373, 0.382] & 7.3±1.0 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -249,6 +249,10 @@ Our findings offer preliminary guidelines for this experimental context: (1) Ear
 The bootstrap-based statistical validation framework provides a replicable methodology for multimodal clustering research. However, the limitations observed—including clustering challenges, limited sample size, and experimental constraints—highlight the need for broader validation. While this controlled experimental approach enables precise method comparison, it represents an initial investigation requiring extension to larger, more diverse datasets and more sophisticated implementations.
 
 Future work should focus on scaling these experiments to larger datasets, implementing advanced attention mechanisms, and ensuring balanced representation across modalities to provide broader insights for the multimodal clustering community.
+
+\section{CODE AND DATA AVAILABILITY}
+
+The complete implementation of our multimodal clustering framework, experimental results, and statistical analysis code are publicly available at: \texttt{https://github.com/eom1202/CSE304}. The repository includes all source code for feature extraction methods, clustering algorithms, bootstrap validation, and visualization tools used in this study. Additionally, the repository contains detailed experimental results, generated visualizations, and configuration files to reproduce our findings.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{reference}
