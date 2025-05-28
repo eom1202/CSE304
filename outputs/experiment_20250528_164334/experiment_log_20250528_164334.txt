@@ -1,0 +1,5 @@
+2025-05-28 16:43:34,241 - INFO - Starting multimodal clustering experiment
+2025-05-28 16:43:34,241 - INFO - Output directory: outputs\experiment_20250528_164334
+2025-05-28 16:43:34,258 - INFO - Random seed set to: 42
+2025-05-28 16:43:42,663 - INFO - Dataset statistics: {'total_samples': 500, 'categories': ['vehicle', 'person', 'animal', 'furniture', 'food'], 'category_distribution': {'vehicle': 100, 'person': 100, 'animal': 100, 'furniture': 100, 'food': 100}, 'avg_text_length': np.float64(31.826), 'text_length_std': np.float64(4.30949231348659), 'image_size': (224, 224)}
+2025-05-28 16:50:07,526 - INFO - Experiment completed successfully

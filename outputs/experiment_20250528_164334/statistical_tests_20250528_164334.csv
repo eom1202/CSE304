@@ -1,0 +1,11 @@
+Method_1,Method_2,Test_Type,P_Value,Corrected_P_Value,Significant,Significant_Corrected,Effect_Size,Effect_Size_Interpretation,Better_Method,Mean_Difference
+Early Fusion,Late Fusion,paired_t_test,1.0298401134893171e-08,1.029840113489317e-07,True,True,2.1442205568252994,large,Early Fusion,0.046415034055585114
+Text Only,Late Fusion,wilcoxon_signed_rank,1.9073486328125e-06,1.9073486328125e-05,True,True,2.0808657965237902,large,Text Only,0.03643333166157037
+Early Fusion,Attention Fusion,paired_t_test,2.4602952119645425e-07,2.4602952119645423e-06,True,True,1.7429544757176663,large,Early Fusion,0.04411049421416302
+Text Only,Attention Fusion,wilcoxon_signed_rank,1.9073486328125e-06,1.9073486328125e-05,True,True,1.6331204454707948,large,Text Only,0.034128791820148274
+Image Only,Early Fusion,paired_t_test,7.694336030372129e-05,0.000769433603037213,True,True,-1.1213079949460145,large,Early Fusion,-0.03217598849123887
+Text Only,Image Only,wilcoxon_signed_rank,0.000850677490234375,0.00850677490234375,True,True,0.8851885584847629,large,Text Only,0.022194286097224125
+Image Only,Late Fusion,paired_t_test,0.0017139740616252761,0.01713974061625276,True,True,0.8155418879519807,large,Image Only,0.014239045564346242
+Image Only,Attention Fusion,paired_t_test,0.005129701253996165,0.05129701253996165,True,False,0.7071074520255332,medium,Image Only,0.011934505722924149
+Text Only,Early Fusion,wilcoxon_signed_rank,0.05316925048828125,0.5316925048828125,False,False,-0.501783984790062,medium,Early Fusion,-0.009981702394014746
+Late Fusion,Attention Fusion,paired_t_test,0.360524748933014,3.6052474893301403,False,False,-0.2095161614288035,small,Attention Fusion,-0.002304539841422093

@@ -1,0 +1,152 @@
+================================================================================
+MULTIMODAL CLUSTERING EXPERIMENT - DETAILED NUMERICAL REPORT
+================================================================================
+
+1. EXECUTIVE SUMMARY
+----------------------------------------
+Best performing method: Early Fusion
+Best composite score: 0.4217
+Number of bootstrap runs: 20
+Total methods compared: 5
+
+2. PERFORMANCE RANKINGS
+----------------------------------------
+1. Early Fusion
+   Mean Score: 0.4217 ± 0.0223
+   95% CI: [0.4110, 0.4324]
+   Silhouette: 0.1296
+   Optimal K: 6
+
+2. Text Only
+   Mean Score: 0.4117 ± 0.0186
+   95% CI: [0.4028, 0.4207]
+   Silhouette: 0.1179
+   Optimal K: 9
+
+3. Image Only
+   Mean Score: 0.3896 ± 0.0147
+   95% CI: [0.3825, 0.3966]
+   Silhouette: 0.0698
+   Optimal K: 5
+
+4. Attention Fusion
+   Mean Score: 0.3776 ± 0.0095
+   95% CI: [0.3731, 0.3822]
+   Silhouette: 0.0815
+   Optimal K: 9
+
+5. Late Fusion
+   Mean Score: 0.3753 ± 0.0075
+   95% CI: [0.3717, 0.3789]
+   Silhouette: 0.0770
+   Optimal K: 6
+
+3. STATISTICAL SIGNIFICANCE TESTS
+----------------------------------------
+Significant differences found:
+
+Text Only vs Image Only:
+   Test: wilcoxon_signed_rank
+   P-value: 0.000851
+   Corrected P-value: 0.008507
+   Effect size: 0.8852 (large)
+   Better method: Text Only
+
+Text Only vs Late Fusion:
+   Test: wilcoxon_signed_rank
+   P-value: 0.000002
+   Corrected P-value: 0.000019
+   Effect size: 2.0809 (large)
+   Better method: Text Only
+
+Text Only vs Attention Fusion:
+   Test: wilcoxon_signed_rank
+   P-value: 0.000002
+   Corrected P-value: 0.000019
+   Effect size: 1.6331 (large)
+   Better method: Text Only
+
+Image Only vs Early Fusion:
+   Test: paired_t_test
+   P-value: 0.000077
+   Corrected P-value: 0.000769
+   Effect size: -1.1213 (large)
+   Better method: Early Fusion
+
+Image Only vs Late Fusion:
+   Test: paired_t_test
+   P-value: 0.001714
+   Corrected P-value: 0.017140
+   Effect size: 0.8155 (large)
+   Better method: Image Only
+
+Early Fusion vs Late Fusion:
+   Test: paired_t_test
+   P-value: 0.000000
+   Corrected P-value: 0.000000
+   Effect size: 2.1442 (large)
+   Better method: Early Fusion
+
+Early Fusion vs Attention Fusion:
+   Test: paired_t_test
+   P-value: 0.000000
+   Corrected P-value: 0.000002
+   Effect size: 1.7430 (large)
+   Better method: Early Fusion
+
+4. COMPLEMENTARITY ANALYSIS
+----------------------------------------
+Most complementary pair: Image Only And Early Fusion
+Complementarity score: 0.3930
+Agreement (ARI): 0.0008
+Average performance: 0.3933
+
+All method pairs (sorted by complementarity):
+   image only vs early fusion: 0.3930
+   text only vs image only: 0.3919
+   early fusion vs late fusion: 0.3824
+   early fusion vs attention fusion: 0.3811
+   text only vs late fusion: 0.3810
+   text only vs attention fusion: 0.3810
+   image only vs late fusion: 0.2590
+   image only vs attention fusion: 0.2586
+   late fusion vs attention fusion: 0.1072
+   text only vs early fusion: 0.0869
+
+5. RAW DATA SUMMARY
+----------------------------------------
+Text Only:
+   Composite scores: [np.float64(0.4090307888831849), np.float64(0.4033931330611687), np.float64(0.39189986962663537), np.float64(0.4051815512244116), np.float64(0.44132006588858974), np.float64(0.40388874093621385), np.float64(0.39474094849237706), np.float64(0.4084101053294292), np.float64(0.41802308154748474), np.float64(0.41566402838464367), np.float64(0.40276594690861445), np.float64(0.43329601152117414), np.float64(0.44531533108449994), np.float64(0.41104771377959964), np.float64(0.38448288000430336), np.float64(0.397386571388677), np.float64(0.45832578786409006), np.float64(0.3969598401050397), np.float64(0.4134440576431224), np.float64(0.40038536755602694)]
+   Silhouette scores: [np.float64(0.09885480624119812), np.float64(0.12703786295903696), np.float64(0.07509862323834421), np.float64(0.12145751304005079), np.float64(0.16392297678754936), np.float64(0.06190446341732443), np.float64(0.11317251511664665), np.float64(0.12665704687559692), np.float64(0.11293366032218129), np.float64(0.09815747923829037), np.float64(0.06345509989253745), np.float64(0.16680286106013048), np.float64(0.1768778024627487), np.float64(0.08875956149610602), np.float64(0.09293368712668991), np.float64(0.09143572674678106), np.float64(0.21423268804109122), np.float64(0.07378920280715656), np.float64(0.14600312135040994), np.float64(0.14420201768164226)]
+   Min composite: 0.3845
+   Max composite: 0.4583
+   Range: 0.0738
+
+Image Only:
+   Composite scores: [np.float64(0.37861181062683347), np.float64(0.3876573532440193), np.float64(0.37625173285705293), np.float64(0.43210347290010065), np.float64(0.39076794263626113), np.float64(0.40135498412308435), np.float64(0.3731491993991668), np.float64(0.389914464379314), np.float64(0.3711963800778093), np.float64(0.4091786918720317), np.float64(0.39896515598352955), np.float64(0.3760602155125499), np.float64(0.3877367176766753), np.float64(0.3703195167171903), np.float64(0.3965120066072054), np.float64(0.401688306550308), np.float64(0.38931673031242087), np.float64(0.3787816004234894), np.float64(0.3989972667758296), np.float64(0.3825125506099304)]
+   Silhouette scores: [np.float32(0.07482136), np.float32(0.092825525), np.float32(0.029550439), np.float32(0.12988152), np.float32(0.07864768), np.float32(0.065623395), np.float32(0.04734659), np.float32(0.078966), np.float32(0.056711566), np.float32(0.08259134), np.float32(0.063415475), np.float32(0.062191647), np.float32(0.05816504), np.float32(0.05192434), np.float32(0.07389116), np.float32(0.049713846), np.float32(0.08719239), np.float32(0.07264781), np.float32(0.06790433), np.float32(0.07221481)]
+   Min composite: 0.3703
+   Max composite: 0.4321
+   Range: 0.0618
+
+Early Fusion:
+   Composite scores: [np.float64(0.4047727831795321), np.float64(0.42582107175254846), np.float64(0.4132536333224323), np.float64(0.40607953003989644), np.float64(0.43860593372468515), np.float64(0.4514005434654992), np.float64(0.39383573667382094), np.float64(0.4131956695044426), np.float64(0.4450388180624027), np.float64(0.4252364338827128), np.float64(0.39133298446006365), np.float64(0.4325877429574605), np.float64(0.45135275556522375), np.float64(0.41134691022998304), np.float64(0.4413682477330353), np.float64(0.39549899402056155), np.float64(0.4673910324825162), np.float64(0.41182111507053376), np.float64(0.38459435568113526), np.float64(0.43006157730109407)]
+   Silhouette scores: [np.float64(0.08835307692662786), np.float64(0.12091808813583275), np.float64(0.055513890085150334), np.float64(0.11318765119380941), np.float64(0.15642624711038333), np.float64(0.19700348968292217), np.float64(0.0976202056425028), np.float64(0.11349886442814518), np.float64(0.18155073800167484), np.float64(0.1214116265495533), np.float64(0.1060783661933352), np.float64(0.1635512124588344), np.float64(0.19030919967672957), np.float64(0.08714328849094123), np.float64(0.16152513248471967), np.float64(0.08636396578068092), np.float64(0.2357435172323173), np.float64(0.08720586839903738), np.float64(0.08943419241509495), np.float64(0.1388796585068437)]
+   Min composite: 0.3846
+   Max composite: 0.4674
+   Range: 0.0828
+
+Late Fusion:
+   Composite scores: [np.float64(0.36847170099078086), np.float64(0.36974593607912726), np.float64(0.3770292586602435), np.float64(0.36967926090707215), np.float64(0.3842418049217352), np.float64(0.3840116298535793), np.float64(0.38537593410316606), np.float64(0.37950290923376034), np.float64(0.3699955197109847), np.float64(0.37479816461301285), np.float64(0.365090366046793), np.float64(0.3752305483069617), np.float64(0.38224038598929483), np.float64(0.36527582362850586), np.float64(0.37217905372349624), np.float64(0.3607968430625659), np.float64(0.3850565846577962), np.float64(0.3783617423409064), np.float64(0.3860881856432765), np.float64(0.37312353552482014)]
+   Silhouette scores: [np.float64(0.069601239362344), np.float64(0.06850903678273285), np.float64(0.0893159683369626), np.float64(0.06352424913164992), np.float64(0.08508613277784173), np.float64(0.08822952990179435), np.float64(0.06073803757506928), np.float64(0.0852495206967384), np.float64(0.06787493949476978), np.float64(0.06861421652378795), np.float64(0.06594851274039684), np.float64(0.07953750326717089), np.float64(0.09933444203369002), np.float64(0.06056143118727069), np.float64(0.07458076751303047), np.float64(0.05620763810561845), np.float64(0.09030499646918166), np.float64(0.0916458510178101), np.float64(0.100627566163799), np.float64(0.07400564560463396)]
+   Min composite: 0.3608
+   Max composite: 0.3861
+   Range: 0.0253
+
+Attention Fusion:
+   Composite scores: [np.float64(0.394534709492772), np.float64(0.37779683286481636), np.float64(0.3842291730057975), np.float64(0.38625113004462686), np.float64(0.38640689667209216), np.float64(0.3846825659031934), np.float64(0.3763342119129864), np.float64(0.3793192475858087), np.float64(0.38443586228385906), np.float64(0.3830153344395658), np.float64(0.370750966523147), np.float64(0.37001988875473035), np.float64(0.3542096722501517), np.float64(0.36983451529356776), np.float64(0.3668412149362214), np.float64(0.3668894412615503), np.float64(0.3877219807266744), np.float64(0.37613897667715424), np.float64(0.3850424714598551), np.float64(0.3679308927377486)]
+   Silhouette scores: [np.float64(0.094326040405032), np.float64(0.08350865779073784), np.float64(0.10329923188524748), np.float64(0.09589845020231405), np.float64(0.08389078716289329), np.float64(0.08921260842015857), np.float64(0.08690882053144074), np.float64(0.08422676981008173), np.float64(0.10728320971757538), np.float64(0.09991773732209938), np.float64(0.07421463306183208), np.float64(0.06427196221990211), np.float64(0.04347777020046948), np.float64(0.06539108026114791), np.float64(0.0646181313093953), np.float64(0.06549127349692947), np.float64(0.08838824276585289), np.float64(0.0905182855620334), np.float64(0.09145569995384059), np.float64(0.054052943847494685)]
+   Min composite: 0.3542
+   Max composite: 0.3945
+   Range: 0.0403
+

@@ -1,0 +1,49 @@
+# Multimodal Clustering Experiment Configuration
+
+# Dataset Configuration
+dataset:
+  source: "mscoco"  # "mscoco" or "synthetic"
+  n_samples: 500
+  categories: ["person", "vehicle", "animal", "furniture", "food"]
+  samples_per_category: 100
+  train_ratio: 0.7
+  test_ratio: 0.3
+  
+  # MS-COCO specific settings
+  coco_data_dir: "./data/coco"  # Path to MS-COCO dataset
+  coco_download_images: false   # Whether to download missing images
+  coco_max_captions_per_image: 3  # Maximum captions to combine per image
+
+# Feature Extraction Configuration
+features:
+  text_dim: 256
+  image_dim: 256
+  fusion_dim: 256
+  methods:
+    - "text_only"
+    - "image_only"
+    - "early_fusion"
+    - "late_fusion"
+    - "attention_fusion"
+
+# Clustering Configuration
+clustering:
+  algorithms:
+    - "kmeans"
+    - "spectral"
+    - "hierarchical"
+  k_range: [3, 10]
+  auto_k_method: "elbow"
+
+# Experiment Configuration
+experiment:
+  n_bootstrap_runs: 20
+  random_seed: 42
+  confidence_level: 0.95
+  alpha: 0.05
+
+# Output Configuration
+output:
+  save_dir: "outputs"
+  save_intermediate: true
+  create_visualizations: true 
